@@ -11,14 +11,18 @@ from sklearn.metrics import accuracy_score,brier_score_loss
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from features import FEATURE_COLUMNS, build_features
+from features import (
+    FEATURE_COLUMNS,
+    EXPERIMENT_FEATURE_COLUMNS,
+    build_features,
+)
 from sklearn.model_selection import TimeSeriesSplit
 
 TICKER = "NVDA"
 MODEL_DIR = Path(__file__).resolve().parent / "models"
 
 
-def evaluate_windows(dataset):
+def evaluate_windows(dataset, columns=FEATURE_COLUMNS, report_name="windows"):
     # Use the earlier 80%; keep the existing latest-period test separate.
     split = int(len(dataset) * 0.8)
     development = dataset.iloc[:split - 1]
@@ -40,9 +44,9 @@ def evaluate_windows(dataset):
         training = development.iloc[train_index]
         testing = development.iloc[test_index]
 
-        X_train = training[FEATURE_COLUMNS]
+        X_train = training[columns]
         y_train = training["target"].astype(int)
-        X_test = testing[FEATURE_COLUMNS]
+        X_test = testing[columns]
         y_test = testing["target"].astype(int)
 
         if y_train.nunique() != 2:
@@ -97,13 +101,14 @@ def evaluate_windows(dataset):
     }
 
     report = {
-        "ticker": TICKER,
-        "windows": results,
-        "average_scores": averages,
+    "ticker": TICKER,
+    "feature_columns": columns,
+    "windows": results,
+    "average_scores": averages,
     }
 
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
-    report_path = MODEL_DIR / f"{TICKER}_windows.json"
+    report_path = MODEL_DIR / f"{TICKER}_{report_name}.json"
     report_path.write_text(
         json.dumps(report, indent=2),
         encoding="utf-8",
@@ -113,7 +118,7 @@ def evaluate_windows(dataset):
     print(json.dumps(averages, indent=2))
 
 
-def train():
+def train(evaluate_only=False):
     #Exclude today's session so we only complete daily bars.
     today = datetime.now(ZoneInfo("America/New_York")).date()
     
@@ -142,6 +147,21 @@ def train():
     dataset = features.copy()
     dataset["target"] = target
     dataset = dataset.dropna()
+    if evaluate_only:
+        print("\n=== ORIGINAL SIX FEATURES ===")
+        evaluate_windows(
+            dataset,
+            columns=FEATURE_COLUMNS,
+            report_name="windows",
+        )
+
+        print("\n=== EXPANDED NINE FEATURES ===")
+        evaluate_windows(
+            dataset,
+            columns=EXPERIMENT_FEATURE_COLUMNS,
+            report_name="windows_expanded",
+        )
+        return
     
     evaluate_windows(dataset)
     

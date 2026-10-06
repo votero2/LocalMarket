@@ -6,7 +6,10 @@
     "return_10d",
     "distance_ma10",
     "distance_ma20",
-    "volatility_10d"
+    "volatility_10d",
+    "intraday_return",
+    "range_pct",
+    "relative_volume20"
   ],
   "windows": [
     {
@@ -16,9 +19,9 @@
       "train_end": "2023-10-02",
       "test_start": "2023-10-04",
       "test_end": "2024-04-04",
-      "accuracy": 0.5555555555555556,
+      "accuracy": 0.5238095238095238,
       "baseline_accuracy": 0.6111111111111112,
-      "brier_score": 0.24752665138047028,
+      "brier_score": 0.24943834832703254,
       "baseline_brier_score": 0.24843594594114354
     },
     {
@@ -28,9 +31,9 @@
       "train_end": "2024-04-03",
       "test_start": "2024-04-05",
       "test_end": "2024-10-03",
-      "accuracy": 0.5476190476190477,
+      "accuracy": 0.5238095238095238,
       "baseline_accuracy": 0.5396825396825397,
-      "brier_score": 0.2505944887236494,
+      "brier_score": 0.25139837755103606,
       "baseline_brier_score": 0.24854306686799107
     },
     {
@@ -40,9 +43,9 @@
       "train_end": "2024-10-02",
       "test_start": "2024-10-04",
       "test_end": "2025-04-07",
-      "accuracy": 0.48412698412698413,
+      "accuracy": 0.46825396825396826,
       "baseline_accuracy": 0.5079365079365079,
-      "brier_score": 0.2528826892491419,
+      "brier_score": 0.25358345156003215,
       "baseline_brier_score": 0.25045499588808684
     },
     {
@@ -52,16 +55,16 @@
       "train_end": "2025-04-04",
       "test_start": "2025-04-08",
       "test_end": "2025-10-07",
-      "accuracy": 0.5476190476190477,
+      "accuracy": 0.5714285714285714,
       "baseline_accuracy": 0.5793650793650794,
-      "brier_score": 0.2466424746173336,
+      "brier_score": 0.24642308788394632,
       "baseline_brier_score": 0.24628625001110535
     }
   ],
   "average_scores": {
-    "accuracy": 0.5337301587301588,
+    "accuracy": 0.5218253968253967,
     "baseline_accuracy": 0.5595238095238095,
-    "brier_score": 0.2494115759926488,
+    "brier_score": 0.2502108163305118,
     "baseline_brier_score": 0.2484300646770817
   }
 }
