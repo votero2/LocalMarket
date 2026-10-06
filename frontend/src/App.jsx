@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import StockDetails from './StockDetails'
+import PriceChart from './PriceChart'
 
 function App() {
   const [stocks, setStocks] = useState([])
@@ -70,6 +71,7 @@ function App() {
           )?.name}
         </p>
         <StockDetails ticker={selectedTicker}/>
+        <PriceChart ticker={selectedTicker}/>
       </section>
      )}
     </main>

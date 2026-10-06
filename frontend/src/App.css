@@ -108,3 +108,30 @@ section p {
 .negative {
   color: #fca5a5;
 }
+
+.price-chart {
+  margin-top: 28px;
+  padding: 24px;
+  background: #0b1120;
+  border: 1px solid #334155;
+  border-radius: 12px;
+}
+
+.price-chart h3 {
+  margin: 0;
+}
+
+.price-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.price-chart svg line {
+  stroke: #334155;
+}
+
+.price-chart svg text {
+  fill: #a6b4c8;
+  font-size: 14px;
+}
