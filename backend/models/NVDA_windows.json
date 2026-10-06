@@ -1,0 +1,59 @@
+{
+  "ticker": "NVDA",
+  "windows": [
+    {
+      "window": 1,
+      "train_rows": 481,
+      "test_rows": 126,
+      "train_end": "2023-10-02",
+      "test_start": "2023-10-04",
+      "test_end": "2024-04-04",
+      "accuracy": 0.5555555555555556,
+      "baseline_accuracy": 0.6111111111111112,
+      "brier_score": 0.24752665138047028,
+      "baseline_brier_score": 0.24843594594114354
+    },
+    {
+      "window": 2,
+      "train_rows": 607,
+      "test_rows": 126,
+      "train_end": "2024-04-03",
+      "test_start": "2024-04-05",
+      "test_end": "2024-10-03",
+      "accuracy": 0.5476190476190477,
+      "baseline_accuracy": 0.5396825396825397,
+      "brier_score": 0.2505944887236494,
+      "baseline_brier_score": 0.24854306686799107
+    },
+    {
+      "window": 3,
+      "train_rows": 733,
+      "test_rows": 126,
+      "train_end": "2024-10-02",
+      "test_start": "2024-10-04",
+      "test_end": "2025-04-07",
+      "accuracy": 0.48412698412698413,
+      "baseline_accuracy": 0.5079365079365079,
+      "brier_score": 0.2528826892491419,
+      "baseline_brier_score": 0.25045499588808684
+    },
+    {
+      "window": 4,
+      "train_rows": 859,
+      "test_rows": 126,
+      "train_end": "2025-04-04",
+      "test_start": "2025-04-08",
+      "test_end": "2025-10-07",
+      "accuracy": 0.5476190476190477,
+      "baseline_accuracy": 0.5793650793650794,
+      "brier_score": 0.2466424746173336,
+      "baseline_brier_score": 0.24628625001110535
+    }
+  ],
+  "average_scores": {
+    "accuracy": 0.5337301587301588,
+    "baseline_accuracy": 0.5595238095238095,
+    "brier_score": 0.2494115759926488,
+    "baseline_brier_score": 0.2484300646770817
+  }
+}

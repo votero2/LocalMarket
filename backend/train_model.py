@@ -12,9 +12,105 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from features import FEATURE_COLUMNS, build_features
+from sklearn.model_selection import TimeSeriesSplit
 
 TICKER = "NVDA"
 MODEL_DIR = Path(__file__).resolve().parent / "models"
+
+
+def evaluate_windows(dataset):
+    # Use the earlier 80%; keep the existing latest-period test separate.
+    split = int(len(dataset) * 0.8)
+    development = dataset.iloc[:split - 1]
+
+    if len(development) < 700:
+        raise ValueError("Not enough data for four evaluation windows.")
+
+    splitter = TimeSeriesSplit(
+        n_splits=4,
+        test_size=126,
+        gap=1,
+    )
+
+    results = []
+
+    for window, (train_index, test_index) in enumerate(
+        splitter.split(development), start=1
+    ):
+        training = development.iloc[train_index]
+        testing = development.iloc[test_index]
+
+        X_train = training[FEATURE_COLUMNS]
+        y_train = training["target"].astype(int)
+        X_test = testing[FEATURE_COLUMNS]
+        y_test = testing["target"].astype(int)
+
+        if y_train.nunique() != 2:
+            raise ValueError(f"Window {window} needs both classes.")
+
+        model = make_pipeline(
+            StandardScaler(),
+            LogisticRegression(max_iter=1000),
+        )
+        model.fit(X_train, y_train)
+
+        baseline = DummyClassifier(strategy="prior")
+        baseline.fit(X_train, y_train)
+
+        probabilities = model.predict_proba(X_test)[:, 1]
+        baseline_probabilities = baseline.predict_proba(X_test)[:, 1]
+
+        result = {
+            "window": window,
+            "train_rows": len(training),
+            "test_rows": len(testing),
+            "train_end": training.index[-1].strftime("%Y-%m-%d"),
+            "test_start": testing.index[0].strftime("%Y-%m-%d"),
+            "test_end": testing.index[-1].strftime("%Y-%m-%d"),
+            "accuracy": float(
+                accuracy_score(y_test, model.predict(X_test))
+            ),
+            "baseline_accuracy": float(
+                accuracy_score(y_test, baseline.predict(X_test))
+            ),
+            "brier_score": float(
+                brier_score_loss(y_test, probabilities)
+            ),
+            "baseline_brier_score": float(
+                brier_score_loss(y_test, baseline_probabilities)
+            ),
+        }
+
+        results.append(result)
+        print(f"\nWindow {window}:")
+        print(json.dumps(result, indent=2))
+
+    score_names = [
+        "accuracy",
+        "baseline_accuracy",
+        "brier_score",
+        "baseline_brier_score",
+    ]
+    averages = {
+        name: sum(result[name] for result in results) / len(results)
+        for name in score_names
+    }
+
+    report = {
+        "ticker": TICKER,
+        "windows": results,
+        "average_scores": averages,
+    }
+
+    MODEL_DIR.mkdir(parents=True, exist_ok=True)
+    report_path = MODEL_DIR / f"{TICKER}_windows.json"
+    report_path.write_text(
+        json.dumps(report, indent=2),
+        encoding="utf-8",
+    )
+
+    print("\nAverage scores across four windows:")
+    print(json.dumps(averages, indent=2))
 
 
 def train():
@@ -46,6 +142,8 @@ def train():
     dataset = features.copy()
     dataset["target"] = target
     dataset = dataset.dropna()
+    
+    evaluate_windows(dataset)
     
     split = int(len(dataset) * 0.8)
     
@@ -115,6 +213,8 @@ def train():
     print(json.dumps(metrics, indent=2))
     print(f"\nSaved model to {MODEL_DIR / f'{TICKER}.joblib'}")
     
-    if __name__ == "__main__":
+    
+    
+if __name__ == "__main__":
         train()
         
