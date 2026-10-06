@@ -76,7 +76,56 @@ function StockDetails({ ticker }) {
         </article>
       </div>
 
-      <p>Prediction model: not trained yet.</p>
+      {details.model_status === "experimental" &&
+ typeof details.up_probability === "number" ? (
+  <div className="quote-card">
+    <h3>Experimental prediction</h3>
+
+    <p>Estimated probability of a higher next-session close</p>
+    <strong>
+      {(details.up_probability * 100).toFixed(2)}%
+    </strong>
+
+    <p>
+      Based on the close dated {details.prediction_as_of}
+      {" · "}{details.model_name}
+    </p>
+
+    {details.model_metrics && (
+      <>
+        <p>
+          Test accuracy:{" "}
+          {(details.model_metrics.accuracy * 100).toFixed(2)}%
+          {" · "}Baseline:{" "}
+          {(details.model_metrics.baseline_accuracy * 100).toFixed(2)}%
+        </p>
+
+        <p>
+          Probability error (Brier, lower is better):{" "}
+          {details.model_metrics.brier_score.toFixed(4)}
+          {" · "}Baseline:{" "}
+          {details.model_metrics.baseline_brier_score.toFixed(4)}
+        </p>
+
+        <p>
+          Evaluated on {details.model_metrics.test_rows} sessions
+          {" · "}{details.model_metrics.test_start}
+          {" to "}{details.model_metrics.test_end}
+        </p>
+      </>
+    )}
+
+    <p className="demo-label">
+      Research prototype · Predictive advantage not established
+    </p>
+  </div>
+) : (
+  <p>
+    {details.model_status === "insufficient_data"
+      ? "Not enough recent data for a prediction."
+      : "Prediction model: not trained for this stock yet."}
+  </p>
+)}
     </div>
   );
 }

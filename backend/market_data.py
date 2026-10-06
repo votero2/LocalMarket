@@ -1,4 +1,8 @@
 from time import monotonic
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+from predict_model import predict_stock
 
 import yfinance as yf
 from fastapi import HTTPException
@@ -18,11 +22,13 @@ def load_market_data(ticker: str):
     if cached and monotonic() - cached["saved_at"] < 300:
         return cached["data"]
 
+    today = datetime.now(ZoneInfo("America/New_York")).date()
     try:
         frame = yf.Ticker(symbol).history(
             period="3mo",
             interval="1d",
             auto_adjust=False,
+            end= today.isoformat(),
             timeout=15
         )
         frame = frame.dropna(subset=["Close"])
@@ -55,5 +61,6 @@ def load_market_data(ticker: str):
         ]
     }
 
+    data.update(predict_stock(symbol,frame))
     CACHE[symbol] = {"saved_at": monotonic(), "data": data}
     return data
