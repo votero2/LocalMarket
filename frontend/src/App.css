@@ -1,0 +1,110 @@
+#root {
+  width: 100%;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 48px);
+  letter-spacing: -1.5px;
+}
+
+main > p {
+  margin: 12px 0 32px;
+  color: #a6b4c8;
+}
+
+main > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+button {
+  min-width: 100px;
+  padding: 14px 22px;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  background: #162033;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+button:hover {
+  background: #22324a;
+  border-color: #60a5fa;
+}
+
+button[aria-pressed="true"] {
+  background: #173a35;
+  border-color: #6ee7b7;
+  color: #6ee7b7;
+}
+
+button:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 4px;
+}
+
+section {
+  margin-top: 28px;
+  padding: 32px;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  background: #111c2e;
+}
+
+section h2 {
+  margin: 0 0 8px;
+  font-size: 30px;
+  color: #6ee7b7;
+}
+
+section p {
+  color: #a6b4c8;
+}
+
+[role="alert"] {
+  color: #fca5a5;
+}
+
+.demo-label {
+  color: #fcd34d;
+  font-size: 14px;
+}
+
+.quote-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.quote-card {
+  padding: 24px;
+  background: #0b1120;
+  border: 1px solid #334155;
+  border-radius: 12px;
+}
+
+.quote-card p {
+  margin: 0 0 12px;
+}
+
+.quote-card strong {
+  font-size: 32px;
+}
+
+.positive {
+  color: #6ee7b7;
+}
+
+.negative {
+  color: #fca5a5;
+}
