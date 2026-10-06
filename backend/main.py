@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from market_data import load_market_data
 
 
 app = FastAPI(title = "MarketMind API")
@@ -45,27 +46,14 @@ DEMO_QUOTES = {
 
 @app.get("/stocks/{ticker}")
 def get_stock_details(ticker: str):
-    symbol = ticker.upper()
-
-    if symbol not in DEMO_QUOTES:
-        raise HTTPException(
-            status_code=404,
-            detail="Stock not supported"
-        )
-
-    quote = DEMO_QUOTES[symbol]
-
+    data = load_market_data(ticker)
     return {
-        "ticker": symbol,
-        "source": "demo",
-        "currency": "USD",
-        "price": quote["price"],
-        "change_percent": quote["change_percent"],
-        "up_probability": None,
-        "model_status": "not_trained"
+        key: value
+        for key, value in data.items()
+        if key != "history"
     }
     
-  
+    
   
 DEMO_HISTORY = {
     "AAPL": [192, 194, 193, 196, 195, 198, 197, 199, 198, 200],
@@ -78,20 +66,11 @@ DEMO_HISTORY = {
 
 @app.get("/stocks/{ticker}/history")
 def get_stock_history(ticker: str):
-    symbol = ticker.upper()
-
-    if symbol not in DEMO_HISTORY:
-        raise HTTPException(
-            status_code=404,
-            detail="Stock not supported"
-        )
-
+    data = load_market_data(ticker)
     return {
-        "ticker": symbol,
-        "source": "demo",
-        "currency": "USD",
-        "history": [
-            {"session": index + 1, "close": price}
-            for index, price in enumerate(DEMO_HISTORY[symbol])
-        ]
+        "ticker": data["ticker"],
+        "source": data["source"],
+        "currency": data["currency"],
+        "as_of": data["as_of"],
+        "history": data["history"]
     }

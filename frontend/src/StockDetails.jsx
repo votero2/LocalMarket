@@ -46,12 +46,13 @@ function StockDetails({ ticker }) {
   return (
     <div>
       <p className="demo-label">
-        SAMPLE DATA · Not current market quotes
-      </p>
+         Yahoo Finance · Daily data as of {details.as_of} · Not live
+     </p>
+      
 
       <div className="quote-grid">
         <article className="quote-card">
-          <p>Sample price</p>
+          <p>Latest daily close</p>
           <strong>
             {details.price.toLocaleString("en-US", {
               style: "currency",
@@ -61,7 +62,7 @@ function StockDetails({ ticker }) {
         </article>
 
         <article className="quote-card">
-          <p>Sample daily change</p>
+          <p>Change from previous close</p>
           <strong
             className={
               details.change_percent >= 0

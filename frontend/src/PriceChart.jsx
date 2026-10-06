@@ -67,21 +67,23 @@ function PriceChart({ ticker }) {
 
   return (
     <div className="price-chart">
-      <h3>Sample price history</h3>
-      <p>Illustrative values · 10 sample sessions · USD</p>
+      <h3>Price history</h3>
+      <p>
+        Yahoo Finance · 3 months · USD · Daily closes
+     </p>
 
       <svg
         viewBox="0 0 800 280"
         role="img"
-        aria-label={`${ticker} sample closing prices over ten sessions`}
+        aria-label={`${ticker} daily closing price history`}
       >
         <line x1="70" y1="30" x2="70" y2="230" />
         <line x1="70" y1="230" x2="770" y2="230" />
 
         <text x="8" y="40">${upper.toFixed(0)}</text>
         <text x="8" y="230">${lower.toFixed(0)}</text>
-        <text x="70" y="260">Session 1</text>
-        <text x="690" y="260">Session 10</text>
+        <text x="70" y="260">{history[0].date}</text>
+        <text x="770" y="260" textAnchor="end">{history[history.length -1].date}</text>
 
         <polyline
           points={points}
